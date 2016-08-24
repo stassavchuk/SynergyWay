@@ -19,3 +19,9 @@ def edit(request, user_id):
     template = loader.get_template('edit.html')
     context = {}
     return HttpResponse(template.render(context, request))
+
+
+def courses(request):
+    template = loader.get_template('courses.html')
+    context = {}
+    return HttpResponse(template.render(context, request))
