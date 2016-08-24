@@ -5,5 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Courses</h1>
+    {% if request.path == '/courses/' %}
+        <h1>HA</h1>
+    {% endif %}
+
+    {% ifnotequal '{{ request.path }}' '/courses/' %}
+        <h1>{{ request.path }}</h1>
+    {% endifnotequal %}
+
 {% endblock %}
