@@ -1,1 +1,1 @@
-# Test taks of Synergy Way
+# Test task of Synergy Way
