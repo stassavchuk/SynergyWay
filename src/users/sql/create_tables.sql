@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "users" (
     user_id     SERIAL        PRIMARY KEY,
     user_name   VARCHAR (64)  NOT NULL,
     email       VARCHAR (128) NOT NULL,
-    status      boolean       NOT NULL      DEFAULT FALSE,
+    status      BOOLEAN       NOT NULL      DEFAULT FALSE,
     phone       VARCHAR (16),
     m_phone     VARCHAR (16)
 );

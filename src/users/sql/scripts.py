@@ -1,29 +1,70 @@
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
-
-# This should be imported from src.settings
-USER = 'stas'
-DB = 'postgres'
-PASSWORD = '21041993'
-HOST = 'localhost'
+import os
 
 
-def create_database(user, default_db, passwd, host):
-    conn_text = 'dbname=' + default_db + ' user=' + user + ' host=' + host + ' password=' + passwd
+class Connector:
+    _cursor = None
+    _user = None
+    _db_name = None
+    _password = None
+    _host = None
+    _db_exist = False
 
-    try:
-        conn = psycopg2.connect(conn_text)
-    except psycopg2.Error as e:
-        print e.message
-        return
-    except BaseException as e:
-        print e.message
-        return
+    def __init__(self, user=None, default_db=None, db_name=None, password=None, host=None, test=None):
+        user = 'postgres' if not user else user
+        default_db = 'postgres' if not default_db else default_db
+        test = False if not test else True
 
-    conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
-    cur = conn.cursor()
-    cur.execute("""CREATE DATABASE name;""")
+        # This should be imported from src.settings
+        db_name = 'users' if not db_name else db_name
+        password = '21041993' if not password else password
+        host = 'localhost' if not host else host
 
+        if not Connector._db_exist:
+            self._create_database(default_db, user, host, password, db_name)
+            self._create_cursor(db_name, user, host, password)
+            self._create_tables()
+
+            if test:
+                # Populate db with test data
+                pass
+
+            # Update status of database
+            Connector._db_exist = True
+
+        if (user, db_name, password, host) != (Connector._user, Connector._db_name,
+                                               Connector._password, Connector._host):
+            self._create_cursor(db_name, user, password, host)
+
+    def _create_cursor(self, db_name, user, host, password):
+        try:
+            conn = psycopg2.connect(dbname=db_name, user=user, host=host, password=password)
+            Connector._cursor = conn.cursor()
+            Connector._user, Connector._db_name, Connector._password, Connector._host = user, db_name, password, host
+        except psycopg2.Error as e:
+            print e.message
+
+
+    def _create_database(self, default_db, user, host, password, db_name):
+        try:
+            # Create connection for default database
+            conn = psycopg2.connect(dbname=default_db, user=user, host=host, password=password)
+            conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+            cur = conn.cursor()
+
+            # Creating database
+            sql_text = 'CREATE DATABASE ' + db_name
+            cur.execute(sql_text)
+        except psycopg2.Error as e:
+            print e.message
+
+    def _create_tables(self):
+        sql_dir = os.path.dirname(os.path.abspath(__file__))
+        sql_path = os.path.join(sql_dir, 'create_tables.sql')
+        with open(sql_path, 'r') as f:
+            sql_text = f.read()
+            Connector._cursor.execute(sql_text)
 
 if __name__ == '__main__':
-    create_database(USER, DB, PASSWORD, HOST)
+    c = Connector()
