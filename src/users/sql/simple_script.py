@@ -13,7 +13,7 @@ cur = conn.cursor()
 
 # Create database with default database 'postgres'
 try:
-    cur.execute("""CREATE DATABASE "Users";""")
+    cur.execute("""CREATE DATABASE "Users1";""")
 except Err as e:
     print 'Fail: ', e.message
 
@@ -25,6 +25,18 @@ cur = conn.cursor()
 # Create tables of custom database
 sql_dir = os.path.dirname(os.path.abspath(__file__))
 sql_path = os.path.join(sql_dir, 'create_tables.sql')
+
+with open(sql_path, 'r') as f:
+    sql_text = f.read()
+
+try:
+    cur.execute(sql_text)
+except Err as e:
+    print 'Fail: ', e.message
+
+
+# Fill tables with test data
+sql_path = os.path.join(sql_dir, 'test_data.sql')
 
 with open(sql_path, 'r') as f:
     sql_text = f.read()
