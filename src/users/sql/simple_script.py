@@ -13,7 +13,7 @@ cur = conn.cursor()
 
 # Create database with default database 'postgres'
 try:
-    cur.execute("""CREATE DATABASE "Users1";""")
+    cur.execute("""CREATE DATABASE "Users";""")
 except Err as e:
     print 'Fail: ', e.message
 
