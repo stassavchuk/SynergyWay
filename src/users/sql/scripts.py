@@ -17,7 +17,7 @@ class Connector:
         test = False if not test else True
 
         # This should be imported from src.settings
-        db_name = 'users' if not db_name else db_name
+        db_name = 'Users' if not db_name else db_name
         password = '21041993' if not password else password
         host = 'localhost' if not host else host
 
@@ -54,7 +54,7 @@ class Connector:
             cur = conn.cursor()
 
             # Creating database
-            sql_text = 'CREATE DATABASE ' + db_name
+            sql_text = 'CREATE DATABASE "' + db_name + '";'
             cur.execute(sql_text)
         except psycopg2.Error as e:
             print e.message
