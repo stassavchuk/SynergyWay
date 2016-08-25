@@ -40,6 +40,7 @@ class Connector:
     def _create_cursor(self, db_name, user, host, password):
         try:
             conn = psycopg2.connect(dbname=db_name, user=user, host=host, password=password)
+            conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
             Connector._cursor = conn.cursor()
             Connector._user, Connector._db_name, Connector._password, Connector._host = user, db_name, password, host
         except psycopg2.Error as e:
@@ -64,7 +65,11 @@ class Connector:
         sql_path = os.path.join(sql_dir, 'create_tables.sql')
         with open(sql_path, 'r') as f:
             sql_text = f.read()
-            Connector._cursor.execute(sql_text)
+            try:
+                Connector._cursor.execute(sql_text)
+            except psycopg2.Error as e:
+                print e.message
+
 
 if __name__ == '__main__':
     c = Connector()
