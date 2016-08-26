@@ -382,6 +382,7 @@ CREATE OR REPLACE FUNCTION create_db_with_tables(db_name VARCHAR(32))
                     END;
                 $func$ LANGUAGE plpgsql;
 
+              -- update user
               CREATE OR REPLACE FUNCTION update_user(u_id INTEGER, u_name VARCHAR(64), u_email VARCHAR(128), u_status BOOLEAN, u_phone VARCHAR(16), u_m_phone VARCHAR(16))
               RETURNS void AS
               $func$
@@ -391,7 +392,7 @@ CREATE OR REPLACE FUNCTION create_db_with_tables(db_name VARCHAR(32))
                   END;
               $func$ LANGUAGE plpgsql;
 
-
+              -- Update user`s records.
               CREATE OR REPLACE FUNCTION update_records(u_id INTEGER, course_list INTEGER[])
                 RETURNS void AS
                 $func$
