@@ -187,7 +187,7 @@ CREATE OR REPLACE FUNCTION update_records(u_id INTEGER, course_list INTEGER[])
         FOREACH c_id IN ARRAY course_list LOOP
           INSERT INTO records (rec_id, user_id, course_id) VALUES (DEFAULT,	u_id,	c_id);
         END LOOP;
-      END;git 
+      END;
   $func$ LANGUAGE plpgsql;
 
 SELECT update_records(5, array[1]);
