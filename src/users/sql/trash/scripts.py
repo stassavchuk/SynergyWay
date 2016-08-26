@@ -62,7 +62,7 @@ class Connector:
 
     def _create_tables(self):
         sql_dir = os.path.dirname(os.path.abspath(__file__))
-        sql_path = os.path.join(sql_dir, 'create_tables.sql')
+        sql_path = os.path.join(sql_dir, 'trash/create_tables.sql')
         with open(sql_path, 'r') as f:
             sql_text = f.read()
             try:
