@@ -21,7 +21,7 @@ END
 $func$  LANGUAGE plpgsql;
 
 -- To select all users run the next:
-SELECT * FROM all_users()
+SELECT * FROM all_users();
 
 -----------------------------------------------------------------------
 
@@ -44,19 +44,20 @@ END
 $func$  LANGUAGE plpgsql;
 
 -- To select user data of needed ID, run the next:
-SELECT * FROM user_data(1)
+SELECT * FROM user_data(1);
 
 ---------------------------------------------------------------------
 
 -- Select one user courses
 CREATE OR REPLACE FUNCTION user_courses(u_id INTEGER)
   RETURNS TABLE (
+    course_id INTEGER,
     course_name   VARCHAR (64)
   ) AS
 $func$
 BEGIN
    RETURN QUERY
-   SELECT courses.course_name FROM records, courses
+   SELECT courses.course_id, courses.course_name FROM records, courses
    WHERE records.user_id = u_id AND records.course_id = courses.course_id;
 END
 $func$  LANGUAGE plpgsql;
@@ -81,6 +82,112 @@ END
 $func$  LANGUAGE plpgsql;
 
 -- To execute, tun the following:
-SELECT * FROM all_courses()
+SELECT * FROM all_courses();
 
 -------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------
+--                        APPEND/DELETE FUNCTIONS                       --
+--------------------------------------------------------------------------
+
+
+-- Should be tested.  !!!!!
+-- Cause buds if some data is already stored in DB. Starts default value from 1, even if 1 is booked
+CREATE OR REPLACE FUNCTION add_user(u_id INTEGER, u_name VARCHAR(64), u_email VARCHAR(128), u_status BOOLEAN, u_phone VARCHAR(16), u_m_phone VARCHAR(16))
+  RETURNS void AS
+  $func$
+      BEGIN
+        INSERT INTO users(user_id, user_name, email, status, phone, m_phone)
+        VALUES(DEFAULT, u_name, u_email, u_status, u_phone, u_m_phone);
+      END;
+  $func$ LANGUAGE plpgsql;
+
+SELECT add_user('new user', 'user@email.com', FALSE, '+000000000000', '+000000000000');
+
+SELECT * FROM all_users();
+
+-----------------------------------------------------------------------------------------------------------------------
+
+-- Delete user
+CREATE OR REPLACE FUNCTION delete_user(u_id INTEGER)
+  RETURNS void AS
+  $func$
+      BEGIN
+        DELETE FROM users WHERE users.user_id = u_id;
+        -- DELETE FROM records WHERE records.user_id = u_id;
+      END;
+  $func$ LANGUAGE plpgsql;
+
+SELECT delete_user(40);
+
+SELECT * FROM all_users();
+
+-------------------------------------------------------------------------------------------------------------------------
+
+-- Update user
+
+CREATE OR REPLACE FUNCTION update_user(u_id INTEGER, u_name VARCHAR(64), u_email VARCHAR(128), u_status BOOLEAN, u_phone VARCHAR(16), u_m_phone VARCHAR(16))
+  RETURNS void AS
+  $func$
+      BEGIN
+        UPDATE users SET (user_name, email, status, phone, m_phone) = (u_name, u_email, u_status, u_phone, u_m_phone)
+        WHERE users.user_id = u_id;
+      END;
+  $func$ LANGUAGE plpgsql;
+
+SELECT update_user(5, 'Stas Savchuk', 'stas@email.com', TRUE, '+000000000000', '+000000000000');
+
+-----------------------------------------------------------------------------------------
+
+-- Add course to user
+
+CREATE OR REPLACE FUNCTION add_record(u_id INTEGER, c_id INTEGER)
+  RETURNS void AS
+  $func$
+      BEGIN
+        IF exists(SELECT 1 FROM records WHERE records.user_id = u_id AND records.course_id = c_id) THEN
+        ELSE
+          INSERT INTO records (rec_id, user_id, course_id) VALUES (DEFAULT,	u_id,	c_id);
+        END IF;
+      END;
+  $func$ LANGUAGE plpgsql;
+
+SELECT add_record(5, 2);
+
+--------------------------------------------------------------------------------------
+
+-- Delete all courses of user
+
+CREATE OR REPLACE FUNCTION delete_all_records(u_id INTEGER)
+  RETURNS void AS
+  $func$
+      BEGIN
+        DELETE FROM records WHERE records.user_id = u_id;
+      END;
+  $func$ LANGUAGE plpgsql;
+
+SELECT delete_all_records(5);
+
+-------------------------------------------------------
+
+-- Update records
+--- !!!
+--- Doesn't work with array[], to delete all record use delete_all_records()
+--- Has the same problem with INSERT as add_user
+
+CREATE OR REPLACE FUNCTION update_records(u_id INTEGER, course_list INTEGER[])
+  RETURNS void AS
+  $func$
+      DECLARE
+        c_id INTEGER;
+      BEGIN
+        DELETE FROM records WHERE records.user_id = u_id;
+
+        FOREACH c_id IN ARRAY course_list LOOP
+          INSERT INTO records (rec_id, user_id, course_id) VALUES (DEFAULT,	u_id,	c_id);
+        END LOOP;
+      END;git 
+  $func$ LANGUAGE plpgsql;
+
+SELECT update_records(5, array[1]);

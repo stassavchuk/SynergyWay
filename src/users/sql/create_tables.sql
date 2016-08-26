@@ -18,6 +18,6 @@ CREATE TABLE IF NOT EXISTS "courses" (
 -- Table "records", the table aimed to connect user and courses as many-to-many
 CREATE TABLE IF NOT EXISTS "records" (
     rec_id      SERIAL        PRIMARY KEY,
-    user_id     INTEGER       NOT NULL      REFERENCES users (user_id) ON UPDATE CASCADE,
-    course_id   INTEGER       NOT NULL      REFERENCES courses (course_id) ON UPDATE CASCADE
+    user_id     INTEGER       NOT NULL      REFERENCES users (user_id) ON UPDATE CASCADE ON DELETE CASCADE,
+    course_id   INTEGER       NOT NULL      REFERENCES courses (course_id) ON UPDATE CASCADE ON DELETE CASCADE
 );
