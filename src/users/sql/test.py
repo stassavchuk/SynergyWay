@@ -113,6 +113,19 @@ def name_generator(n):
         yield (name, email, status, phone, m_phone)
 
 
+def populate_courses():
+    with cursor(DB_NAME, USER, HOST, PASSWORD) as cur:
+        cur.execute('''
+        INSERT INTO courses (course_id, course_name, code) VALUES
+          (1,	'Python-Base', 'P012345'),
+          (2,	'Python-Database',	'P234567'),
+          (3, 'HTML',	'H345678'),
+          (4,	'Java-Base',	'J456789'),
+          (5,	'JavaScript-Base', 'JS43210');
+
+        ''')
+
+
 if __name__ == '__main__':
     for i in name_generator(100):
         add_user(*i)
