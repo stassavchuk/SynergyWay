@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS dblink;
+
 CREATE OR REPLACE FUNCTION create_db(db_name VARCHAR(32))
   RETURNS void AS
   $func$

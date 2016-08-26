@@ -1,4 +1,3 @@
-
 # singleton
 class Database:
     """
@@ -13,9 +12,34 @@ class Database:
     def get_db(self):
         pass
 
-class DatabaseConnector:
 
+class DatabaseConnector:
     def __init__(self):
         self.database = Database.get_db()
 
 
+# Errors
+
+class DatabaseError(BaseException):
+    """Base exception"""
+    pass
+
+
+class DatabaseCreationError(DatabaseError):
+    """If something happen during database creation"""
+    pass
+
+
+class DatabaseExecutionError(DatabaseError):
+    """If something happen during execution of function"""
+    pass
+
+
+class DatabaseValueError(DatabaseError):
+    """Incorrect values input"""
+    pass
+
+
+class DatabaseConnectionError(DatabaseError):
+    """If something happen during opening or closing the connection"""
+    pass

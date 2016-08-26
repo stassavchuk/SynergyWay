@@ -89,7 +89,7 @@ CREATE OR REPLACE FUNCTION construct_db()
       $func$  LANGUAGE plpgsql;
 
       -- Create user
-      CREATE OR REPLACE FUNCTION add_user(u_id INTEGER, u_name VARCHAR(64), u_email VARCHAR(128), u_status BOOLEAN, u_phone VARCHAR(16), u_m_phone VARCHAR(16))
+      CREATE OR REPLACE FUNCTION add_user(u_name VARCHAR(64), u_email VARCHAR(128), u_status BOOLEAN, u_phone VARCHAR(16), u_m_phone VARCHAR(16))
       RETURNS void AS
       $func$
           BEGIN
