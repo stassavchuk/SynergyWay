@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
 from sql.database import Database
+from forms import CreateUser
 
 
 def users(request):
@@ -14,7 +15,8 @@ def users(request):
 
 def create(request):
     template = loader.get_template('create.html')
-    context = {}
+    form = CreateUser()
+    context = dict(form=form)
     return HttpResponse(template.render(context, request))
 
 
