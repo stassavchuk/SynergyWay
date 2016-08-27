@@ -83,42 +83,80 @@ class Database:
 
     # @tryexcept
     def get_all_users(self):
-        with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
-            cur.callproc("all_users", [])
-            return cur.fetchall()
+        try:
+            with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
+                cur.callproc("all_users", [])
+                return cur.fetchall()
+        except BaseException as e:
+            print 'Get all users exception'
+            print e.message
+            return []
 
     # @tryexcept
     def get_user_data(self, user_id):
-        with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
-            cur.callproc("user_data", [user_id])
-            return cur.fetchall()
+        try:
+            with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
+                cur.callproc("user_data", [user_id])
+                return cur.fetchall()
+        except BaseException as e:
+            print 'Get one user exception'
+            print e.message
+            return []
 
     # @tryexcept
     def get_user_courses(self, user_id):
-        with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
-            cur.callproc("user_courses", [user_id])
-            return cur.fetchall()
+        try:
+            with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
+                cur.callproc("user_courses", [user_id])
+                return cur.fetchall()
+        except BaseException as e:
+            print 'Get user courses exception'
+            print e.message
+            return []
 
     # @tryexcept
     def get_all_courses(self):
-        with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
-            cur.callproc("all_courses", [])
-            return cur.fetchall()
+        try:
+            with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
+                cur.callproc("all_courses", [])
+                return cur.fetchall()
+        except BaseException as e:
+            print 'Get all courses exception'
+            print e.message
+            return []
 
     # @tryexcept
     def add_user(self, name, email, status, phone, m_phone):
-        with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
-            cur.callproc("add_user", [name, email, status, phone, m_phone])
+        try:
+            with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
+                cur.callproc("add_user", [name, email, status, phone, m_phone])
+                return True
+        except BaseException as e:
+            print 'Add user exception'
+            print e.message
+            return False
 
     # @tryexcept
     def delete_user(self, user_id):
-        with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
-            cur.callproc("delete_user", [user_id])
+        try:
+            with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
+                cur.callproc("delete_user", [user_id])
+                return True
+        except BaseException as e:
+            print 'Delete user exception'
+            print e.message
+            return False
 
     # @tryexcept
     def update_records(self, user_id, course_list):
-        with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
-            cur.callproc("update_records", [user_id, course_list])
+        try:
+            with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
+                cur.callproc("update_records", [user_id, course_list])
+                return True
+        except BaseException as e:
+            print 'Update records exception'
+            print e.message
+            return False
 
 
 if __name__ == '__main__':
