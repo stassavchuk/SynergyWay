@@ -35,6 +35,10 @@ class UserListView(View):
         context = dict(user_list=user_list)
         return HttpResponse(template.render(context, request))
 
+    def post(self, request):
+        p = request.POST['user_id']
+        return HttpResponse(p)
+
 
 class EditUserView(View):
     def get(self, request, user_id):

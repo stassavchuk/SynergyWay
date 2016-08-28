@@ -58,12 +58,14 @@
           {% endif %}
         </td>
         <td>
-{#          <form action="{% url 'users' user_id=user.0 %}" method="post">#}
-{#            <span><a href="{% url 'edit' user_id=user.0 %}" class="btn btn-default" role="button"><i class="glyphicon glyphicon-edit"></i></a></span>#}
-{#            <span>#}
-{#              <button role="button" type="submit" class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>#}
-{#            </span>#}
-{#          </form>#}
+          <form action="{% url 'users' %}" method="post">
+            {% csrf_token %}
+            <span><a href="{% url 'edit' user_id=user.0 %}" class="btn btn-default" role="button"><i class="glyphicon glyphicon-edit"></i></a></span>
+            <input type="hidden" name="user_id" value="{{ user.0 }}" />
+            <span>
+              <button role="button" type="submit" class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>
+            </span>
+          </form>
         </td>
       </tr>
 
