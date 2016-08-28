@@ -25,7 +25,8 @@
 
     <div class="col-sm-4">
       <div class="navbar-form navbar-right">
-        <select class="form-control">
+{#        <select name="user-table_length" aria-controls="user-table" class=""><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>#}
+        <select class="form-control" aria-controls="user-table">
           <option value="10">10</option>
           <option value="15">15</option>
           <option value="20">20</option>
@@ -35,7 +36,7 @@
 
   </div>
 
-  <table class="table">
+  <table class="table" id="user-table">
     <thead class="thead-inverse">
     <tr>
       <th>NAME</th>
@@ -72,4 +73,22 @@
     {% endfor %}
     </tbody>
   </table>
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      oTable = $('#user-table').DataTable({
+        "ordering": false,
+        "searching": true,
+
+      });
+
+      $('#srch-term').keyup(function(){
+        oTable.search($(this).val()).draw();
+      });
+
+      $("#user-table_filter").remove();
+    });
+  </script>
 {% endblock %}
