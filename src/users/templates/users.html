@@ -12,9 +12,9 @@
         <a href="{% url 'create' %}" class="btn btn-default" role="button"><i class="glyphicon glyphicon-plus"></i></a>
         <div class="input-group">
           <div class="input-group-btn">
-            <button class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+            <button class="btn btn-default" id="search-button"><i class="glyphicon glyphicon-search"></i></button>
           </div>
-          <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
+          <input type="text" class="form-control" placeholder="Search" id="search-input"/>
         </div>
       </div>
     </div>
@@ -84,11 +84,28 @@
 
       });
 
-      $('#srch-term').keyup(function(){
-        oTable.search($(this).val()).draw();
+      $("#user-table_filter").remove();
+
+      $('#search-button').on('click', function () {
+        var value = $('#search-input').val();
+          oTable
+              .columns(0)
+              .search(value)
+              .draw();
       });
 
-      $("#user-table_filter").remove();
+      $(document).keypress(function(e) {
+          var isFocus = $("#search-input").is(":focus");
+          if(e.which == 13 && isFocus) {
+            var value = $('#search-input').val();
+            oTable
+                .columns(0)
+                .search(value)
+                .draw();
+          }
+      });
+
+
     });
   </script>
 {% endblock %}
