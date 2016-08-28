@@ -35,7 +35,39 @@
 
   </div>
 
+  <table class="table">
+    <thead class="thead-inverse">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Status</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in user_list %}
+      <tr>
+        <td>{{ user.1 }}</td>
+        <td>{{ user.2 }}</td>
+        <td>
+          {% if user.3 %}
+          <div>Active</div>
+          {% endif %}
+          {% if not user.3 %}
+          <div>Inactive</div>
+          {% endif %}
+        </td>
+        <td>
+{#          <form action="{% url 'users' user_id=user.0 %}" method="post">#}
+{#            <span><a href="{% url 'edit' user_id=user.0 %}" class="btn btn-default" role="button"><i class="glyphicon glyphicon-edit"></i></a></span>#}
+{#            <span>#}
+{#              <button role="button" type="submit" class="btn btn-default"><i class="glyphicon glyphicon-trash"></i></button>#}
+{#            </span>#}
+{#          </form>#}
+        </td>
+      </tr>
 
-
-  <p>{{ user_list }}</p>
+    {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}
