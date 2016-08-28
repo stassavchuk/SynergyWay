@@ -2,10 +2,24 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-<title>Create</title>
+  <title>Create</title>
 {% endblock %}
 
 {% block content %}
-    <h1>Create</h1>
-    <div>{{ form|crispy }}</div>
+  <div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+
+      <div class="text-center"><h1>CREATE USER</h1></div>
+
+      <form action="{% url 'create' %}" method="post">
+        <div class="form-group">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <input type="submit" class="btn btn-md btn-submit" value="Create"/>
+        </div>
+      </form>
+
+    </div>
+  </div>
 {% endblock %}

@@ -2,7 +2,29 @@ from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
 from sql.database import Database
-from forms import CreateUser
+from forms import CreateUserForm
+from django.views.generic import View
+
+
+class CreateUserView(View):
+    def get(self, request):
+        template = loader.get_template('create.html')
+        form = CreateUserForm()
+        context = dict(form=form)
+        return HttpResponse(template.render(context, request))
+
+    def post(self, request, *args, **kwargs):
+        try:
+            form = CreateUserForm(request.POST or None)
+            if form.is_valid():
+                return HttpResponse('OK', status=200)
+            else:
+                template = loader.get_template('create.html')
+                form = CreateUserForm(request.POST)
+                context = dict(form=form)
+                return HttpResponse(template.render(context, request))
+        except BaseException as e:
+            return HttpResponse(status=400)
 
 
 def users(request):
