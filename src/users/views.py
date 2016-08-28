@@ -36,8 +36,13 @@ class UserListView(View):
         return HttpResponse(template.render(context, request))
 
     def post(self, request):
-        p = request.POST['user_id']
-        return HttpResponse(p)
+        user_id = request.POST['user_id']
+        template = loader.get_template('users.html')
+        db = Database()
+        db.delete_user(user_id)
+        user_list = db.get_all_users()
+        context = dict(user_list=user_list)
+        return HttpResponse(template.render(context, request))
 
 
 class EditUserView(View):
