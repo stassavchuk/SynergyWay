@@ -81,6 +81,9 @@
       oTable = $('#user-table').DataTable({
         "ordering": false,
         "searching": true,
+        "bInfo" : false,
+{#                "sDom": '<"row view-filter"<"col-sm-12"<"pull-left"l><"pull-right"f><"clearfix">>>t<"row view-pager"<"col-sm-12"<"text-center"ip>>>'#}
+
 
       });
 
@@ -105,6 +108,10 @@
           }
       });
 
+      // Stupid way to centre paginate
+      $('#user-table_paginate').parent().prev().remove();
+      $('#user-table_paginate').parent().removeAttr('class').addClass('col-sm-12');
+      $('#user-table_paginate').css('text-align', 'center');
 
     });
   </script>
