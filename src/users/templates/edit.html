@@ -73,23 +73,30 @@
       </div>
 
       <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-          <div class="row">
-            <div class="col-sm-10">
-              <select class="form-control" name="course" id="id_course_select">
-                {% for course in all_courses %}
-                  <option value="{{ course.0 }}">{{ course.1 }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="col-sm-2">
-              <button type="button" role="button" class="btn btn-default" id="id_course_button"><i
-                  class="glyphicon glyphicon-plus"></i></button>
+
+        <div id="id_selector_row">
+
+
+          <div class="col-sm-4"></div>
+          <div class="col-sm-4">
+            <div class="row">
+              <div class="col-sm-10">
+                <select class="form-control" name="course" id="id_course_select">
+                  {% for course in all_courses %}
+                    <option value="{{ course.0 }}">{{ course.1 }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-sm-2">
+                <button type="button" role="button" class="btn btn-default" id="id_course_button"><i
+                    class="glyphicon glyphicon-plus"></i></button>
+              </div>
             </div>
           </div>
+          <div class="col-sm-4"></div>
         </div>
-        <div class="col-sm-4"></div>
+
+
       </div>
 
     </div>
@@ -208,38 +215,73 @@
   </script>
 
 
+
   <script type="text/javascript">
-    $('[id^=remove_]').click(function () {
-      var node = $(this);
-      var tagName = node.prop('tagName');
-      while (tagName !== 'TR') {
-        node = node.parent();
-        tagName = node.prop('tagName');
+    var allCourses = {{ all_courses|safe }};
+    var userCourses = {{ user_courses|safe }};
+
+    var courses = {};
+    for (var i = 0; i < allCourses.length; i++) {
+      var courseID = allCourses[i][0];
+      var courseName = allCourses[i][1];
+      var isOnList = false;
+
+      for (var j = 0; j < userCourses.length; j++) {
+        if (userCourses[j][0] == courseID) {
+          isOnList = true;
+          break;
+        }
       }
-      node.remove();
-    });
+
+      courses[courseID] = {
+        name: courseName,
+        isOnList: isOnList
+      }
+    }
+
+    function constructSelect() {
+
+      $('#id_selector_row').css('display', 'block');
+
+      $('#id_course_select option').remove();
+      var count = 0;
+      for (var id in courses) {
+        if (!courses[id].isOnList) {
+          count += 1;
+          $('#id_course_select').append('<option value="' + id + '">' + courses[id].name + '</option>');
+        }
+      }
+      if (count == 0) {
+        $('#id_selector_row').css('display', 'none');
+      }
+    }
+
+    function constructTable() {
+      $('#id_course_table tr').remove();
+      for (var id in courses) {
+        if (courses[id].isOnList) {
+          $('#id_course_table').append('<tr><td>' + courses[id].name + '</td><td><div class="text-right"><div role="button" id="remove_' + id + '"><i class="glyphicon glyphicon-remove-circle"></i></div></div></td></tr>');
+          $('#remove_' + id).click(function (id) {
+            thisID = $(this).attr('id').split('remove_')[1];
+            courses[thisID].isOnList = false;
+            constructSelect();
+            constructTable();
+          });
+        }
+      }
+
+    }
 
     $('#id_course_button').click(function () {
-      var course_id = $('#id_course_select').find(":selected").val();
-      var course_name = $('#id_course_select').find(":selected").text();
-
-      if ($('#remove_' + course_id).length > 0) {
-        return;
-      }
-
-      $('#id_course_table').append(
-          '<tr><td>' + course_name + '</td><td><div class="text-right"><div role="button" id="remove_' + course_id + '"><i class="glyphicon glyphicon-remove-circle"></i></div></div></td></tr>'
-      );
-
-      $('#remove_' + course_id).click(function () {
-        var node = $(this);
-        var tagName = node.prop('tagName');
-        while (tagName !== 'TR') {
-          node = node.parent();
-          tagName = node.prop('tagName');
-        }
-        node.remove();
-      });
+      var id = $('#id_course_select').find(":selected").val();
+      console.log(id);
+      courses[id].isOnList = true;
+      constructTable();
+      constructSelect();
     });
+
+    constructSelect();
+    constructTable();
+
   </script>
 {% endblock %}

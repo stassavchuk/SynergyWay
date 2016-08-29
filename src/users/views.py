@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from sql.database import Database
 from forms import UserForm
 from django.views.generic import View
+import json
 
 
 class CreateUserView(View):
@@ -63,6 +64,11 @@ class EditUserView(View):
         # ---
 
         user_courses = db.get_user_courses(user_id)
+
+        print all_courses
+        print user_courses
+        all_courses = json.dumps(all_courses)
+        user_courses = json.dumps(user_courses)
 
         data = {
             'user_name': user_data[1],
