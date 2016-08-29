@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
 from sql.database import Database
@@ -15,7 +14,6 @@ class CreateUserView(View):
         return HttpResponse(template.render(context, request))
 
     def post(self, request, *args, **kwargs):
-        # try:
         form = UserForm(request.POST or None)
         if form.is_valid():
             data = form.cleaned_data
@@ -30,8 +28,6 @@ class CreateUserView(View):
             form = UserForm(request.POST)
             context = dict(form=form)
             return HttpResponse(template.render(context, request))
-            # except BaseException as e:
-            #     return HttpResponse(status=400)
 
 
 class UserListView(View):
