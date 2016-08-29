@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load user_extras %}
+
 
 {% block title %}
   <title>Create</title>
@@ -27,29 +29,79 @@
   </div>
 
   <div class="row">
-    <div class="col-sm-4"></div>
-    <div class="col-sm-4">
-      <form action="{% url 'create' %}" method="post">
-        <div class="form-group">
-          {% csrf_token %}
-          {{ form|crispy }}
+    <form action="{% url 'create' %}" method="post">
+      {% csrf_token %}
+
+      {% for field in form %}
+
+
+        <div class="form-group {% if field.errors %}has-error{% endif %}">
+          <div class="row">
+            <div class="col-sm-4"></div>
+
+            <div class="col-sm-4">
+              <label for="{{ field.id }}">
+                {% if field.label == 'Name' or field.label == 'E-mail' %}
+                  <span>*</span>
+                {% endif %}
+                {{ field.label }}
+              </label>
+            </div>
+
+            <div class="col-sm-4"></div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+              <div class="control">
+                {{ field|add_class:"form-control" }}
+              </div>
+            </div>
+            <div class="col-sm-4">{{ field.errors.0 }}</div>
+          </div>
+
+        </div>
+      {% endfor %}
+
+
+      <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
           <input type="submit" class="btn btn-md btn-submit" value="Create"/>
         </div>
-      </form>
-    </div>
-    <div class="col-sm-4"></div>
+        <div class="col-sm-4"></div>
+      </div>
+
+    </form>
+
+
+{#    <div class="col-sm-4"></div>#}
+{#    <div class="col-sm-4">#}
+{##}
+{#      <form action="{% url 'create' %}" method="post">#}
+{#        {% csrf_token %}#}
+{#        {{ form|crispy }}#}
+{#        <input type="submit" class="btn btn-md btn-submit" value="Create"/>#}
+{##}
+{#      </form>#}
+{##}
+{#    </div>#}
+{#    <div class="col-sm-4"></div>#}
+
+
   </div>
 {% endblock %}
 
 {% block scripts %}
   {% if success %}
     <script type="text/javascript">
-    window.setTimeout(
-        function () {
-          window.location.replace("{% url 'users' %}");
-        },
-        3000
-    );
+      window.setTimeout(
+          function () {
+            window.location.replace("{% url 'users' %}");
+          },
+          3000
+      );
     </script>
   {% endif %}
 {% endblock %}
