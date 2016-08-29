@@ -29,7 +29,8 @@
   </div>
 
   <div class="row">
-    <form action="" id="id_form">
+    <form action="{{ request.path }}" method="post" id="id_form">
+      {% csrf_token %}
       {% for field in form.visible_fields %}
 
         <div class="form-group">
@@ -60,43 +61,47 @@
 
         </div>
       {% endfor %}
-    </form>
 
-
-    <div class="form-group">
-
-      <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-          <label for="id_course_select">Courses</label>
-        </div>
+      <div style="display: none">
+        {% for field in form.hidden_fields %}
+          {{ field }}
+        {% endfor %}
       </div>
 
-      <div class="row">
+      <div class="form-group">
 
-        <div id="id_selector_row">
-
-
+        <div class="row">
           <div class="col-sm-4"></div>
           <div class="col-sm-4">
-            <div class="row">
-              <div class="col-sm-10">
-                <select class="form-control" name="course" id="id_course_select">
-                </select>
-              </div>
-              <div class="col-sm-2">
-                <button type="button" role="button" class="btn btn-default" id="id_course_button"><i
-                    class="glyphicon glyphicon-plus"></i></button>
-              </div>
-            </div>
+            <label for="id_course_select">Courses</label>
           </div>
-          <div class="col-sm-4"></div>
         </div>
 
+        <div class="row">
+
+          <div id="id_selector_row">
+
+
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+              <div class="row">
+                <div class="col-sm-10">
+                  <select class="form-control" name="course" id="id_course_select">
+                  </select>
+                </div>
+                <div class="col-sm-2">
+                  <button type="button" role="button" class="btn btn-default" id="id_course_button"><i
+                      class="glyphicon glyphicon-plus"></i></button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-4"></div>
+          </div>
+
+
+        </div>
 
       </div>
-
-    </div>
 
       <div class="row">
         <div class="col-sm-4"></div>
@@ -110,13 +115,14 @@
       </div>
 
 
-    <div class="row">
-      <div class="col-sm-4"></div>
-      <div class="col-sm-4">
-        <input type="submit" class="btn btn-md btn-submit" id="id_save_button" value="Save"/>
+      <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <input type="submit" class="btn btn-md btn-submit" id="id_save_button" value="Save"/>
+        </div>
+        <div class="col-sm-4"></div>
       </div>
-      <div class="col-sm-4"></div>
-    </div>
+    </form>
 
   </div>
 {% endblock %}
@@ -248,10 +254,25 @@
             courses[thisID].isOnList = false;
             constructSelect();
             constructTable();
+            updateHiddenInput();
           });
         }
       }
 
+    }
+
+    function updateHiddenInput() {
+      var courseList = '';
+      for (var id in courses){
+        if (courses[id].isOnList){
+          if (courseList !== ''){
+            courseList += '&' + String(id);
+          } else {
+            courseList = String(id);
+          }
+        }
+      }
+      $('#id_courses').val(courseList);
     }
 
     $('#id_course_button').click(function () {
@@ -260,35 +281,12 @@
       courses[id].isOnList = true;
       constructTable();
       constructSelect();
+      updateHiddenInput();
     });
 
     constructSelect();
     constructTable();
+    updateHiddenInput();
 
-  
-    $('#id_save_button').click(function () {
-      var coursesList = [];
-      for (var id in courses){
-        if (courses[id].isOnList){
-          coursesList.push(id);
-        }
-      }
-
-      $.ajax({
-        type: 'GET',
-        url: $(location).attr('href'),
-        data: {
-          csrfmiddlewaretoken: '{{ csrf_token }}',
-          courses: coursesList,
-          user_data: $('#id_form').serializeArray()
-        },
-        success: function () {
-          console.log('HHHHHHAHHAHHAHA');
-        }
-      });
-
-{#      console.log($('#id_form').serializeArray());#}
-{#      console.log(coursesList);#}
-    })
   </script>
 {% endblock %}

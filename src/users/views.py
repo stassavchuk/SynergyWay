@@ -81,12 +81,22 @@ class EditUserView(View):
         return HttpResponse(template.render(context, request))
 
     def post(self, request, user_id):
-        print '---- POST request ----'
-        print UserForm(request.POST.get('user_data')).cleaned_data
-        print request.POST.get('courses')
-        print user_id
-        print '----------------------'
-        return HttpResponse("OK")
+        form = UserForm(request.POST or None)
+        if form.is_valid():
+            data = form.cleaned_data
+
+            print data
+
+            template = loader.get_template('edit.html')
+            form = UserForm(request.POST)
+            context = dict(form=form, success=True)
+            return HttpResponse(template.render(context, request))
+        else:
+            template = loader.get_template('edit.html')
+            form = UserForm(request.POST)
+            context = dict(form=form)
+            return HttpResponse(template.render(context, request))
+
 
 class CoursesView(View):
     def get(self, request):

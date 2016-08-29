@@ -45,5 +45,6 @@ class UserForm(forms.Form):
             m_phone = ''
         return m_phone
 
-class EditUserForm(forms.Form):
+
+class CoursesHiddenForm(forms.Form):
     pass
