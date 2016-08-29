@@ -9,8 +9,8 @@ class CreateUserForm(forms.Form):
 
     # Phones should be reconstructed
     # by adding regex + frontend
-    phone = forms.CharField(label='Phone', max_length=16, required=False)
-    m_phone = forms.CharField(label='Mobile phone', max_length=16, required=False)
+    phone = forms.CharField(label='Phone', max_length=19, required=False)
+    m_phone = forms.CharField(label='Mobile phone', max_length=19, required=False)
 
     status = forms.ChoiceField(label='Status', choices=[(True, 'Active'), (False, 'Inactive')], required=False)
 

@@ -35,7 +35,7 @@
       {% for field in form %}
 
 
-        <div class="form-group {% if field.errors %}has-error{% endif %}">
+        <div class="form-group">
           <div class="row">
             <div class="col-sm-4"></div>
 
@@ -54,7 +54,7 @@
           <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
-              <div class="control">
+              <div class="control {% if field.errors %}has-error{% endif %}">
                 {{ field|add_class:"form-control" }}
               </div>
             </div>
@@ -76,18 +76,18 @@
     </form>
 
 
-{#    <div class="col-sm-4"></div>#}
-{#    <div class="col-sm-4">#}
-{##}
-{#      <form action="{% url 'create' %}" method="post">#}
-{#        {% csrf_token %}#}
-{#        {{ form|crispy }}#}
-{#        <input type="submit" class="btn btn-md btn-submit" value="Create"/>#}
-{##}
-{#      </form>#}
-{##}
-{#    </div>#}
-{#    <div class="col-sm-4"></div>#}
+    {#    <div class="col-sm-4"></div>#}
+    {#    <div class="col-sm-4">#}
+    {##}
+    {#      <form action="{% url 'create' %}" method="post">#}
+    {#        {% csrf_token %}#}
+    {#        {{ form|crispy }}#}
+    {#        <input type="submit" class="btn btn-md btn-submit" value="Create"/>#}
+    {##}
+    {#      </form>#}
+    {##}
+    {#    </div>#}
+    {#    <div class="col-sm-4"></div>#}
 
 
   </div>
@@ -104,4 +104,46 @@
       );
     </script>
   {% endif %}
+
+  <script type="text/javascript">
+    String.prototype.splice = function (idx, rem, str) {
+      return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+    };
+
+    $('input[id$=phone]').keyup(function (e) {
+      {#      this.value = this.value.replace(/[^0-9\.]/g, '');#}
+      var code = e.which;
+      if (code !== 8) {
+        var val = this.value.replace(/[^0-9\.]/g, '');
+        if (val[0] !== '+') {
+          val = '+' + val;
+        }
+        if (val.length >= 3) {
+          val = val.splice(3, 0, ' (');
+        }
+        if (val.length >= 8) {
+          val = val.splice(8, 0, ') ');
+        }
+        if (val.length >= 13) {
+          val = val.splice(13, 0, ' ');
+        }
+        if (val.length >= 16) {
+          val = val.splice(16, 0, ' ');
+        }
+        this.value = val;
+      } else {
+        var val = this.value;
+        if (val.slice(-1) === ' ') {
+          val = val.substring(0, val.length - 1)
+        }
+        if (val.slice(-1) === ')') {
+          val = val.substring(0, val.length - 1)
+        }
+        if (val.slice(-2) === ' (') {
+          val = val.substring(0, val.length - 2)
+        }
+        this.value = val;
+      }
+    });
+  </script>
 {% endblock %}
