@@ -10,11 +10,9 @@ from psycopg2 import Error
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from contextlib import contextmanager
 
-
 __all__ = ['Database']
 __version__ = '0.01'
 __author__ = 'Stanislav Savchuk'
-
 
 DEFAULT_DB_NAME = 'postgres'
 DB_NAME = 'Users'
@@ -161,4 +159,3 @@ class Database:
 
 if __name__ == '__main__':
     d = Database()
-

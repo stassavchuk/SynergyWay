@@ -30,8 +30,8 @@ class CreateUserView(View):
             form = UserForm(request.POST)
             context = dict(form=form)
             return HttpResponse(template.render(context, request))
-        # except BaseException as e:
-        #     return HttpResponse(status=400)
+            # except BaseException as e:
+            #     return HttpResponse(status=400)
 
 
 class UserListView(View):

@@ -52,4 +52,3 @@ class CoursesForm(forms.Form):
         courses = self.cleaned_data.get('courses').split(splitter)
         courses = [int(c) for c in courses]
         return courses
-

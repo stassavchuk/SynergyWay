@@ -2,7 +2,6 @@
 
 """
 
-
 __all__ = ['DatabaseError']
 __version__ = '0.01'
 __author__ = 'Stanislav Savchuk'
