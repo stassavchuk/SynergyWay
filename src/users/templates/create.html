@@ -142,6 +142,9 @@
         if (val.slice(-2) === ' (') {
           val = val.substring(0, val.length - 2)
         }
+        if (val === '+'){
+          val = '';
+        }
         this.value = val;
       }
     });

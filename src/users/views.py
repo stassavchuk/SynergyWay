@@ -53,10 +53,19 @@ class UserListView(View):
 
 class EditUserView(View):
     def get(self, request, user_id):
-        template = loader.get_template('edit.html')
+        template = loader.get_template('create.html')
         db = Database()
-        user_data = db.get_user_data(user_id)
-        context = dict(user_data=user_data)
+        user_data = db.get_user_data(user_id)[0]
+
+        data = {
+            'user_name': user_data[1],
+            'email': user_data[2],
+            'status': user_data[3],
+            'phone': user_data[4],
+            'm_phone': user_data[5]
+        }
+        form = CreateUserForm(data)
+        context = dict(form=form)
         return HttpResponse(template.render(context, request))
 
 
