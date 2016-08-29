@@ -1,10 +1,245 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load user_extras %}
+
 
 {% block title %}
-<title>EDIT</title>
+  <title>Change user</title>
 {% endblock %}
 
 {% block content %}
-    <h1>EDIT</h1>
-    <p>{{ user_data }}</p>
+  <div class="row">
+    <div class="col-sm-4">
+      <a href="{% url 'users' %}" class="btn btn-default" role="button"><i
+          class="glyphicon glyphicon-menu-left"></i></a>
+    </div>
+    <div class="col-sm-4">
+      <div class="text-center"><h1>CHANGE USER</h1></div>
+    </div>
+
+    <div class="col-sm-4">
+      {% if success %}
+        <div class="text-right">
+          <div class="alert alert-success" style="display:inline-block;">
+            Changed saved successfully.
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
+    <form action="">
+      {% for field in form %}
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-4"></div>
+
+            <div class="col-sm-4">
+              <label for="{{ field.id }}">
+                {% if field.label == 'Name' or field.label == 'E-mail' %}
+                  <span>*</span>
+                {% endif %}
+                {{ field.label }}
+              </label>
+            </div>
+
+            <div class="col-sm-4"></div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+              <div class="control {% if field.errors %}has-error{% endif %}">
+                {{ field|add_class:"form-control" }}
+              </div>
+            </div>
+            <div class="col-sm-4">{{ field.errors.0 }}</div>
+          </div>
+
+        </div>
+      {% endfor %}
+    </form>
+
+
+    <div class="form-group">
+
+      <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <label for="id_course_select">Courses</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <div class="row">
+            <div class="col-sm-10">
+              <select class="form-control" name="course" id="id_course_select">
+                {% for course in all_courses %}
+                  <option value="{{ course.0 }}">{{ course.1 }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-sm-2">
+              <button type="button" role="button" class="btn btn-default" id="id_course_button"><i
+                  class="glyphicon glyphicon-plus"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4"></div>
+      </div>
+
+    </div>
+
+    {% if user_courses %}
+      <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="col-sm-4">
+          <table class="table">
+            <tbody id="id_course_table">
+            {% for course_name in user_courses %}
+              <tr>
+                <td>
+                  {{ course_name.1 }}
+                </td>
+                <td>
+                  <div class="text-right">
+                    <div role="button" id="remove_{{ course_name.0 }}"><i class="glyphicon glyphicon-remove-circle"></i>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm-4"></div>
+      </div>
+    {% endif %}
+
+
+    <div class="row">
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4">
+        <input type="submit" class="btn btn-md btn-submit" value="Save"/>
+      </div>
+      <div class="col-sm-4"></div>
+    </div>
+
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  {% if success %}
+    <script type="text/javascript">
+      window.setTimeout(
+          function () {
+            window.location.replace("{% url 'users' %}");
+          },
+          3000
+      );
+    </script>
+  {% endif %}
+
+  <script type="text/javascript">
+    String.prototype.splice = function (idx, rem, str) {
+      return this.slice(0, idx) + str + this.slice(idx + Math.abs(rem));
+    };
+
+    function refactor_phone(val) {
+      val = val.replace(/[^0-9\.]/g, '');
+
+      if (val[0] !== '+') {
+        val = '+' + val;
+      }
+      if (val.length >= 3) {
+        val = val.splice(3, 0, ' (');
+      }
+      if (val.length >= 8) {
+        val = val.splice(8, 0, ') ');
+      }
+      if (val.length >= 13) {
+        val = val.splice(13, 0, ' ');
+      }
+      if (val.length >= 16) {
+        val = val.splice(16, 0, ' ');
+      }
+      return val;
+    }
+
+    function refactor_phone_backspace(val) {
+      if (val.slice(-1) === ' ') {
+        val = val.substring(0, val.length - 1)
+      }
+      if (val.slice(-1) === ')') {
+        val = val.substring(0, val.length - 1)
+      }
+      if (val.slice(-2) === ' (') {
+        val = val.substring(0, val.length - 2)
+      }
+      if (val === '+') {
+        val = '';
+      }
+      return val;
+    }
+
+    $('input[id$=phone]').keyup(function (e) {
+      var code = e.which;
+      if (code !== 8) {
+        var val = this.value;
+        this.value = refactor_phone(val);
+      } else {
+        var val = this.value;
+        this.value = refactor_phone_backspace(val);
+      }
+    });
+
+    $(document).ready(function () {
+      var phones = $('input[id$=phone]');
+      for (var i = 0; i < phones.length; i++) {
+        if (phones[i].value !== '') {
+          phones[i].value = refactor_phone(phones[i].value);
+        }
+      }
+    });
+  </script>
+
+
+  <script type="text/javascript">
+    $('[id^=remove_]').click(function () {
+      var node = $(this);
+      var tagName = node.prop('tagName');
+      while (tagName !== 'TR') {
+        node = node.parent();
+        tagName = node.prop('tagName');
+      }
+      node.remove();
+    });
+
+    $('#id_course_button').click(function () {
+      var course_id = $('#id_course_select').find(":selected").val();
+      var course_name = $('#id_course_select').find(":selected").text();
+
+      if ($('#remove_' + course_id).length > 0) {
+        return;
+      }
+
+      $('#id_course_table').append(
+          '<tr><td>' + course_name + '</td><td><div class="text-right"><div role="button" id="remove_' + course_id + '"><i class="glyphicon glyphicon-remove-circle"></i></div></div></td></tr>'
+      );
+
+      $('#remove_' + course_id).click(function () {
+        var node = $(this);
+        var tagName = node.prop('tagName');
+        while (tagName !== 'TR') {
+          node = node.parent();
+          tagName = node.prop('tagName');
+        }
+        node.remove();
+      });
+    });
+  </script>
 {% endblock %}
