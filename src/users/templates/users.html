@@ -26,7 +26,7 @@
     <div class="col-sm-4">
       <div class="navbar-form navbar-right">
 {#        <select name="user-table_length" aria-controls="user-table" class=""><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select>#}
-        <select class="form-control" aria-controls="user-table">
+        <select class="form-control" id="table-length-selector">
           <option value="10">10</option>
           <option value="15">15</option>
           <option value="20">20</option>
@@ -91,7 +91,8 @@
 
       });
 
-      $("#user-table_filter").remove();
+      $('#user-table_length').remove();
+      $('#user-table_filter').remove();
 
       $('#search-button').on('click', function () {
         var value = $('#search-input').val();
@@ -117,6 +118,11 @@
       $('#user-table_paginate').parent().removeAttr('class').addClass('col-sm-12');
       $('#user-table_paginate').css('text-align', 'center');
 
+
+      $('#table-length-selector').change(function () {
+        var len = $(this).find(":selected").text();
+        oTable.page.len(len).draw();
+      });
 
     });
   </script>
