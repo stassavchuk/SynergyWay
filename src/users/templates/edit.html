@@ -29,8 +29,8 @@
   </div>
 
   <div class="row">
-    <form action="">
-      {% for field in form %}
+    <form action="" id="id_form">
+      {% for field in form.visible_fields %}
 
         <div class="form-group">
           <div class="row">
@@ -113,7 +113,7 @@
     <div class="row">
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
-        <input type="submit" class="btn btn-md btn-submit" value="Save"/>
+        <input type="submit" class="btn btn-md btn-submit" id="id_save_button" value="Save"/>
       </div>
       <div class="col-sm-4"></div>
     </div>
@@ -265,5 +265,30 @@
     constructSelect();
     constructTable();
 
+  
+    $('#id_save_button').click(function () {
+      var coursesList = [];
+      for (var id in courses){
+        if (courses[id].isOnList){
+          coursesList.push(id);
+        }
+      }
+
+      $.ajax({
+        type: 'GET',
+        url: $(location).attr('href'),
+        data: {
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          courses: coursesList,
+          user_data: $('#id_form').serializeArray()
+        },
+        success: function () {
+          console.log('HHHHHHAHHAHHAHA');
+        }
+      });
+
+{#      console.log($('#id_form').serializeArray());#}
+{#      console.log(coursesList);#}
+    })
   </script>
 {% endblock %}

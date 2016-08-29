@@ -65,8 +65,6 @@ class EditUserView(View):
 
         user_courses = db.get_user_courses(user_id)
 
-        print all_courses
-        print user_courses
         all_courses = json.dumps(all_courses)
         user_courses = json.dumps(user_courses)
 
@@ -82,6 +80,13 @@ class EditUserView(View):
         context = dict(form=form, all_courses=all_courses, user_courses=user_courses)
         return HttpResponse(template.render(context, request))
 
+    def post(self, request, user_id):
+        print '---- POST request ----'
+        print UserForm(request.POST.get('user_data')).cleaned_data
+        print request.POST.get('courses')
+        print user_id
+        print '----------------------'
+        return HttpResponse("OK")
 
 class CoursesView(View):
     def get(self, request):

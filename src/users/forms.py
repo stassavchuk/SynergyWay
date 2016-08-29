@@ -12,6 +12,8 @@ class UserForm(forms.Form):
 
     status = forms.ChoiceField(label='Status', choices=[(True, 'Active'), (False, 'Inactive')], required=False)
 
+    courses = forms.CharField(widget=forms.HiddenInput(), required=False)
+
     def clean_user_name(self):
         user_name = self.cleaned_data.get('user_name')
         if not user_name:

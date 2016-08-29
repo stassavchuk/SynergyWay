@@ -32,7 +32,7 @@
     <form action="{% url 'create' %}" method="post">
       {% csrf_token %}
 
-      {% for field in form %}
+      {% for field in form.visible_fields %}
 
 
         <div class="form-group">
