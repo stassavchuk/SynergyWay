@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse
 from sql.database import Database
-from forms import UserForm
+from forms import UserForm, CoursesForm
 from django.views.generic import View
 import json
 
@@ -55,18 +55,11 @@ class UserListView(View):
 class EditUserView(View):
     def get(self, request, user_id):
         template = loader.get_template('edit.html')
+
         db = Database()
         user_data = db.get_user_data(user_id)[0]
         all_courses = db.get_all_courses()
-
-        # ---
-        db.update_records(user_id, [1, 2, 3])
-        # ---
-
         user_courses = db.get_user_courses(user_id)
-
-        all_courses = json.dumps(all_courses)
-        user_courses = json.dumps(user_courses)
 
         data = {
             'user_name': user_data[1],
@@ -77,24 +70,44 @@ class EditUserView(View):
         }
         form = UserForm(data)
         form.fields['user_name'].widget.attrs['readonly'] = True
-        context = dict(form=form, all_courses=all_courses, user_courses=user_courses)
+
+        hidden_form = CoursesForm()
+
+        all_courses = json.dumps(all_courses)
+        user_courses = json.dumps(user_courses)
+        context = dict(form=form, all_courses=all_courses, user_courses=user_courses, hidden_form=hidden_form)
         return HttpResponse(template.render(context, request))
 
     def post(self, request, user_id):
         form = UserForm(request.POST or None)
-        if form.is_valid():
-            data = form.cleaned_data
+        hidden_form = CoursesForm(request.POST or None)
 
-            print data
+        if form.is_valid() and hidden_form.is_valid():
+            data = form.cleaned_data
+            user_courses = hidden_form.cleaned_data.get('courses')
+
+            db = Database()
+            db.update_records(user_id, user_courses)
+            # !!!!! Update user data
+
+            all_courses = db.get_all_courses()
+            user_courses = db.get_user_courses(user_id)
 
             template = loader.get_template('edit.html')
-            form = UserForm(request.POST)
-            context = dict(form=form, success=True)
+            all_courses = json.dumps(all_courses)
+            user_courses = json.dumps(user_courses)
+            context = dict(form=form, success=True, all_courses=all_courses, user_courses=user_courses)
+
             return HttpResponse(template.render(context, request))
         else:
+            db = Database()
+            all_courses = db.get_all_courses()
+            user_courses = db.get_user_courses(user_id)
+
             template = loader.get_template('edit.html')
             form = UserForm(request.POST)
-            context = dict(form=form)
+            hidden_form = CoursesForm(request.POST)
+            context = dict(form=form, hidden_form=hidden_form, all_courses=all_courses, user_courses=user_courses)
             return HttpResponse(template.render(context, request))
 
 

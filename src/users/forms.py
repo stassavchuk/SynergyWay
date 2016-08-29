@@ -12,8 +12,6 @@ class UserForm(forms.Form):
 
     status = forms.ChoiceField(label='Status', choices=[(True, 'Active'), (False, 'Inactive')], required=False)
 
-    courses = forms.CharField(widget=forms.HiddenInput(), required=False)
-
     def clean_user_name(self):
         user_name = self.cleaned_data.get('user_name')
         if not user_name:
@@ -46,5 +44,12 @@ class UserForm(forms.Form):
         return m_phone
 
 
-class CoursesHiddenForm(forms.Form):
-    pass
+class CoursesForm(forms.Form):
+    courses = forms.CharField(widget=forms.HiddenInput(), required=False)
+
+    def clean_courses(self):
+        splitter = '&'
+        courses = self.cleaned_data.get('courses').split(splitter)
+        courses = [int(c) for c in courses]
+        return courses
+
