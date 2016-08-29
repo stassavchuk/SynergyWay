@@ -17,7 +17,10 @@ class CreateUserView(View):
         try:
             form = CreateUserForm(request.POST or None)
             if form.is_valid():
-                return HttpResponse('OK', status=200)
+                template = loader.get_template('create.html')
+                form = CreateUserForm(request.POST)
+                context = dict(form=form, success=True)
+                return HttpResponse(template.render(context, request))
             else:
                 template = loader.get_template('create.html')
                 form = CreateUserForm(request.POST)

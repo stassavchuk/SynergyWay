@@ -7,11 +7,28 @@
 
 {% block content %}
   <div class="row">
+    <div class="col-sm-4">
+      <a href="{% url 'users' %}" class="btn btn-default" role="button"><i
+          class="glyphicon glyphicon-menu-left"></i></a>
+    </div>
+    <div class="col-sm-4">
+      <div class="text-center"><h1>CREATE USER</h1></div>
+    </div>
+
+    <div class="col-sm-4">
+      {% if success %}
+        <div class="text-right">
+          <div class="alert alert-success" style="display:inline-block;">
+            User created successfully.
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="row">
     <div class="col-sm-4"></div>
     <div class="col-sm-4">
-
-      <div class="text-center"><h1>CREATE USER</h1></div>
-
       <form action="{% url 'create' %}" method="post">
         <div class="form-group">
           {% csrf_token %}
@@ -19,7 +36,20 @@
           <input type="submit" class="btn btn-md btn-submit" value="Create"/>
         </div>
       </form>
-
     </div>
+    <div class="col-sm-4"></div>
   </div>
+{% endblock %}
+
+{% block scripts %}
+  {% if success %}
+    <script type="text/javascript">
+    window.setTimeout(
+        function () {
+          window.location.replace("{% url 'users' %}");
+        },
+        3000
+    );
+    </script>
+  {% endif %}
 {% endblock %}
