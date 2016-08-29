@@ -14,20 +14,23 @@ class CreateUserView(View):
         return HttpResponse(template.render(context, request))
 
     def post(self, request, *args, **kwargs):
-        try:
-            form = CreateUserForm(request.POST or None)
-            if form.is_valid():
-                template = loader.get_template('create.html')
-                form = CreateUserForm(request.POST)
-                context = dict(form=form, success=True)
-                return HttpResponse(template.render(context, request))
-            else:
-                template = loader.get_template('create.html')
-                form = CreateUserForm(request.POST)
-                context = dict(form=form)
-                return HttpResponse(template.render(context, request))
-        except BaseException as e:
-            return HttpResponse(status=400)
+        # try:
+        form = CreateUserForm(request.POST or None)
+        if form.is_valid():
+            data = form.cleaned_data
+            db = Database()
+            db.add_user(**data)
+            template = loader.get_template('create.html')
+            form = CreateUserForm(request.POST)
+            context = dict(form=form, success=True)
+            return HttpResponse(template.render(context, request))
+        else:
+            template = loader.get_template('create.html')
+            form = CreateUserForm(request.POST)
+            context = dict(form=form)
+            return HttpResponse(template.render(context, request))
+        # except BaseException as e:
+        #     return HttpResponse(status=400)
 
 
 class UserListView(View):

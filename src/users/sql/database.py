@@ -126,10 +126,10 @@ class Database:
             return []
 
     # @tryexcept
-    def add_user(self, name, email, status, phone, m_phone):
+    def add_user(self, user_name, email, status, phone, m_phone):
         try:
             with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
-                cur.callproc("add_user", [name, email, status, phone, m_phone])
+                cur.callproc("add_user", [user_name, email, status, phone, m_phone])
                 return True
         except BaseException as e:
             print 'Add user exception'
