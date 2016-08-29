@@ -88,7 +88,7 @@ class EditUserView(View):
 
             db = Database()
             db.update_records(user_id, user_courses)
-            # !!!!! Update user data
+            db.update_user(user_id=user_id, **data)
 
             all_courses = db.get_all_courses()
             user_courses = db.get_user_courses(user_id)
@@ -96,6 +96,7 @@ class EditUserView(View):
             template = loader.get_template('edit.html')
             all_courses = json.dumps(all_courses)
             user_courses = json.dumps(user_courses)
+            form.fields['user_name'].widget.attrs['readonly'] = True
             context = dict(form=form, success=True, all_courses=all_courses, user_courses=user_courses)
 
             return HttpResponse(template.render(context, request))
@@ -107,6 +108,7 @@ class EditUserView(View):
             template = loader.get_template('edit.html')
             form = UserForm(request.POST)
             hidden_form = CoursesForm(request.POST)
+            form.fields['user_name'].widget.attrs['readonly'] = True
             context = dict(form=form, hidden_form=hidden_form, all_courses=all_courses, user_courses=user_courses)
             return HttpResponse(template.render(context, request))
 

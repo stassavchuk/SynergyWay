@@ -156,6 +156,16 @@ class Database:
             print e.message
             return False
 
+    def update_user(self, user_id, user_name, email, status, phone, m_phone):
+        try:
+            with self.cursor(self.db_name, self.user, self.host, self.password) as cur:
+                cur.callproc("update_user", [user_id, user_name, email, status, phone, m_phone])
+                return True
+        except BaseException as e:
+            print 'Update records exception'
+            print e.message
+            return False
+
 
 if __name__ == '__main__':
     d = Database()
