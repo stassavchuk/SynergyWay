@@ -66,3 +66,30 @@ body{
     border-color: #ccc;
     color: #ff363c;
 }
+
+.has-error .form-control-feedback{
+    color: #ff363c;
+}
+
+.right-inner-addon {
+    position: relative;
+}
+.right-inner-addon input {
+    padding-right: 30px;
+}
+.right-inner-addon i {
+    position: absolute;
+    right: 0px;
+    padding: 10px 12px;
+    pointer-events: none;
+    color: #ff363c;
+}
+.alert-success{
+    border-radius: 50px;
+    font-weight: bold;
+    color: #33c480;
+    border: 2px solid #33c480;
+    background-color: white;
+    padding-right: 50px;
+    padding-left: 50px;
+}

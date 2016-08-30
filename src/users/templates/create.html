@@ -36,7 +36,7 @@
       {% for field in form.visible_fields %}
 
 
-        <div class="form-group">
+        <div class="form-group {% if field.errors %}has-feedback{% endif %}">
           <div class="row">
             <div class="col-sm-4"></div>
 
@@ -55,7 +55,10 @@
           <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
-              <div class="control {% if field.errors %}has-error{% endif %}">
+              <div class="control right-inner-addon {% if field.errors %}has-error{% endif %}">
+                {% if field.errors %}
+                  <i class="glyphicon glyphicon-exclamation-sign"></i>
+                {% endif %}
                 {{ field|add_class:"form-control" }}
               </div>
             </div>
