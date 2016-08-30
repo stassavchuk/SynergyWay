@@ -1,9 +1,11 @@
+import json
+
 from django.template import loader
 from django.http import HttpResponse
-from sql.database import Database
-from forms import UserForm, CoursesForm
 from django.views.generic import View
-import json
+
+from forms import UserForm, CoursesForm
+from sql.database import Database
 
 
 class CreateUserView(View):
@@ -39,6 +41,11 @@ class UserListView(View):
         return HttpResponse(template.render(context, request))
 
     def post(self, request):
+        """
+        Using to delete user from database.
+        :param request: request
+        :return: response
+        """
         user_id = request.POST['user_id']
         template = loader.get_template('users.html')
         db = Database()

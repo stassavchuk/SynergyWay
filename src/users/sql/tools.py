@@ -1,10 +1,16 @@
+"""This module provides special tools for database.
+
+"""
+
 from random import randint
-from functools import wraps
-from psycopg2 import Error
-from contextlib import contextmanager
 
 
 def data_generator(n):
+    """
+    Generator of random data. Yields tuple of random generated name, email and phone number.
+    :param n: Count of data to generate.
+    :return: Generator of tuple (name, email, status, phone, m_phone)
+    """
     f_name_start = ['Mo', 'He', 'Ja', 'Schmu', 'Schlo']
     f_name_end = ['donei', 'shel', 'mon', 'mo', 'diah']
     l_name_start = ['Gold', 'Wasser', 'Edel', 'Bergen', 'Braun']
@@ -30,14 +36,3 @@ def data_generator(n):
         m_phone = '+38032' + str(randint(1000000, 9999999))
 
         yield (name, email, status, phone, m_phone)
-
-
-def tryexcept(func):
-    @wraps(func)
-    def new_func(*args, **kwargs):
-        try:
-            return func(args, kwargs)
-        except Error as e:
-            print e.message
-
-    return new_func
