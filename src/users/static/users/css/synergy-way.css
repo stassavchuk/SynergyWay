@@ -1,0 +1,68 @@
+/*black - #343240;*/
+/*light black - #585761*/
+/*white - #f4f3f4;*/
+/*background white - #f1f1f1*/
+/*red - #ff363c*/
+/*green - #33c480*/
+
+body{
+    background-color: #f1f1f1;
+}
+
+.white {
+    background-color: white;
+}
+
+.btn {
+    border-radius: 50px;
+}
+
+.form-control {
+    border-radius: 50px;
+}
+
+.navbar {
+    border-radius: 0px;
+}
+
+.navbar-inverse {
+    background-color: #343240;
+}
+
+.thead-inverse {
+    color: #f4f3f4;
+    background-color: #585761;
+}
+
+.green {
+    background-color: #33c480;
+    color: #f4f3f4;
+}
+
+.red {
+    background-color: #ff363c;
+    color: #f4f3f4;
+}
+
+.act {
+    color: #33c480;
+}
+
+.inact {
+    color: #ff363c;
+}
+
+.pagination>li>a{
+    border-radius: 50px;
+}
+
+/*Доопрацювати*/
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+    background-color: #33c480;
+    color: #f4f3f4;
+}
+
+.has-error .form-control{
+    border-color: #ccc;
+    color: #ff363c;
+}

@@ -11,7 +11,7 @@
 {% block content %}
   <div class="row">
     <div class="col-sm-4">
-      <a href="{% url 'users' %}" class="btn btn-default" role="button"><i
+      <a href="{% url 'users' %}" class="btn btn-default red" role="button"><i
           class="glyphicon glyphicon-menu-left"></i></a>
     </div>
     <div class="col-sm-4">
@@ -43,7 +43,7 @@
             <div class="col-sm-4">
               <label for="{{ field.id }}">
                 {% if field.label == 'Name' or field.label == 'E-mail' %}
-                  <span>*</span>
+                  <span class="inact">*</span>
                 {% endif %}
                 {{ field.label }}
               </label>
@@ -59,7 +59,7 @@
                 {{ field|add_class:"form-control" }}
               </div>
             </div>
-            <div class="col-sm-4">{{ field.errors.0 }}</div>
+            <div class="col-sm-4 inact">{{ field.errors.0 }}</div>
           </div>
 
         </div>
@@ -69,7 +69,9 @@
       <div class="row">
         <div class="col-sm-4"></div>
         <div class="col-sm-4">
-          <input type="submit" class="btn btn-md btn-submit" value="Create"/>
+          <div class="text-right">
+            <input type="submit" class="btn btn-md btn-submit green" value="Create"/>
+          </div>
         </div>
         <div class="col-sm-4"></div>
       </div>
