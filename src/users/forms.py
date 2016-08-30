@@ -50,5 +50,5 @@ class CoursesForm(forms.Form):
     def clean_courses(self):
         splitter = '&'
         courses = self.cleaned_data.get('courses').split(splitter)
-        courses = [int(c) for c in courses]
+        courses = [int(c) for c in courses if c]
         return courses
